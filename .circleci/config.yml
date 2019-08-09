@@ -1,0 +1,24 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/elixir:1.9.2
+      - image: postgres
+        environment:
+          POSTGRES_USER: bot
+          POSTGRES_DB: bot
+          POSTGRES_PASSWORD: bot
+
+    steps:
+      - checkout
+      - run: MIX_ENV=test mix local.rebar --force
+      - run: MIX_ENV=test mix local.hex --force
+      - run: MIX_ENV=test mix deps.get
+      - run: MIX_ENV=test mix ecto.create
+      - run: MIX_ENV=test mix ecto.migrate
+      - run: MIX_ENV=test mix test
+      - run: MIX_ENV=test mix credo
+      - run: MIX_ENV=test mix coveralls.post 
+              --branch ${CIRCLE_BRANCH} 
+              --committer ${CIRCLE_USERNAME}
+              --sha ${CIRCLE_SHA1}
