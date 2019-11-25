@@ -39,11 +39,11 @@ defmodule Mix.Tasks.Team do
     end
   end
 
-  defp get_qrcode_payload(uuid) do
+  def get_qrcode_payload(uuid) do
     "https://telegram.me/#{@bot_name}?start=#{uuid}"
   end
 
-  defp create_qrcode(uuid, team_name) do
+  def create_qrcode(uuid, team_name) do
     get_qrcode_payload(uuid)
     |> EQRCode.encode()
     |> EQRCode.svg(color: "#03B6AD", shape: "circle", width: 300)
@@ -52,7 +52,7 @@ defmodule Mix.Tasks.Team do
     :ok
   end
 
-  defp remove_qrcode(team_name) do
+  def remove_qrcode(team_name) do
     File.rm("./images/#{team_name}.svg")
 
     :ok
